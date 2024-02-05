@@ -23,6 +23,9 @@ collect_generic_agent ()
   else
     touch "$embedded_agent"
   fi
+  if [ -f "$custom_script" ]; then
+    python3 "$custom_script" "$embedded_agent"
+  fi
   embedded_agents+=("$embedded_agent")
 }
 
@@ -41,9 +44,6 @@ case $host_os in
       exit 1
     fi
 
-    if [ -f "$custom_script" ]; then
-      python3 "$custom_script" "$embedded_agent"
-    fi
     exec "$resource_compiler" --toolchain=apple -c "$resource_config" -o "$output_dir/frida-data-agent" "$embedded_agent"
     ;;
   freebsd|qnx)
